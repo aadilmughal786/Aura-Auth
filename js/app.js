@@ -59,6 +59,14 @@ function createAccountElement(account) {
                 <span class="next-code" data-next="${account.id}">${account.nextCode || '------'}</span>
             </div>
             <div class="actions">
+                <button class="qr-btn" data-qr="${account.id}" title="Show QR code">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                    </svg>
+                </button>
                 <button class="copy-btn" data-copy="${account.id}" title="Copy code">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
@@ -106,6 +114,32 @@ function handleSearch(query) {
     render(state);
 }
 
+function showQRCode(accountId) {
+    const account = state.accounts.find(a => a.id === accountId);
+    if (!account) return;
+
+    const modal = document.getElementById('qr-modal');
+    const container = document.getElementById('qr-code-container');
+    container.innerHTML = '';
+
+    const uri = `otpauth://totp/${encodeURIComponent(account.issuer || 'Unknown')}:${encodeURIComponent(account.name)}?secret=${account.secret}&issuer=${encodeURIComponent(account.issuer || 'Unknown')}`;
+
+    new QRCode(container, {
+        text: uri,
+        width: 200,
+        height: 200,
+        colorDark: '#f8fafc',
+        colorLight: '#12121a',
+        correctLevel: QRCode.CorrectLevel.H
+    });
+
+    modal?.classList.add('active');
+}
+
+function hideQRModal() {
+    document.getElementById('qr-modal')?.classList.remove('active');
+}
+
 function init() {
     state.accounts = getAccounts().map(a => ({ ...a, code: '------', remaining: 30, progress: 100 }));
     initSearch(getAccounts());
@@ -132,6 +166,10 @@ function init() {
             const id = e.target.closest('.copy-btn')?.dataset.copy;
             if (id) handleCopyCode(id);
         }
+        if (e.target.closest('.qr-btn')) {
+            const id = e.target.closest('.qr-btn')?.dataset.qr;
+            if (id) showQRCode(id);
+        }
         if (e.target.closest('.current-code')) {
             const id = e.target.closest('.account-card')?.dataset.id;
             if (id) handleCopyCode(id);
@@ -146,6 +184,11 @@ function init() {
 
     document.getElementById('delete-modal')?.addEventListener('click', (e) => {
         if (e.target.id === 'delete-modal') hideDeleteModal();
+    });
+
+    document.getElementById('close-qr')?.addEventListener('click', hideQRModal);
+    document.getElementById('qr-modal')?.addEventListener('click', (e) => {
+        if (e.target.id === 'qr-modal') hideQRModal();
     });
 
     startPulse();

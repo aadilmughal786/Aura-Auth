@@ -80,6 +80,18 @@
         </div>
     </div>
 
+    <div id="qr-modal" class="modal">
+        <div class="modal-content qr-modal-content">
+            <h2>Account QR Code</h2>
+            <div id="qr-code-container"></div>
+            <p class="qr-instruction">Scan this with your authenticator app to transfer the account</p>
+            <div class="modal-actions">
+                <button id="close-qr" class="btn-primary">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
     <script type="module" src="js/app.js"></script>
 </body>
