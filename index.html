@@ -14,9 +14,24 @@
             <p class="tagline">Privacy-First TOTP Generator</p>
         </header>
 
+        <div class="toolbar">
+            <div class="search-bar">
+                <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="search-input" placeholder="Search accounts...">
+            </div>
+            <button id="add-btn" class="add-btn-header">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+            </button>
+        </div>
+
         <main class="main">
             <div id="accounts" class="accounts-list"></div>
-            <button id="add-btn" class="add-button">+ Add Account</button>
         </main>
 
         <footer class="footer">
@@ -46,6 +61,26 @@
         </div>
     </div>
 
+    <div id="delete-modal" class="modal">
+        <div class="modal-content delete-modal-content">
+            <div class="delete-warning-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </div>
+            <h2>Delete Account</h2>
+            <p class="delete-message">Are you sure you want to delete <strong id="delete-account-name"></strong>?</p>
+            <p class="delete-warning">This action cannot be undone. Your 2FA codes will be permanently removed.</p>
+            <div class="modal-actions">
+                <button id="cancel-delete" class="btn-secondary">Cancel</button>
+                <button id="confirm-delete" class="btn-danger" disabled>Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
     <script type="module" src="js/app.js"></script>
 </body>
 </html>

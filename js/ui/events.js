@@ -1,6 +1,9 @@
 import { saveAccount, getAccounts, deleteAccount as removeAccount } from '../utils/storage.js';
 import { generateCode } from '../core/timer.js';
 
+let deleteAccountId = null;
+let deleteTimer = null;
+
 export async function handleAddAccount() {
     const name = document.getElementById('account-name')?.value;
     const secret = document.getElementById('account-secret')?.value.trim().replace(/\s/g, '');
@@ -30,9 +33,53 @@ export async function handleAddAccount() {
     window.location.reload();
 }
 
-export async function handleDeleteAccount(id) {
-    if (confirm('Delete this account?')) {
-        removeAccount(id);
+export function showDeleteModal(id) {
+    const account = getAccounts().find(a => a.id === id);
+    if (!account) return;
+
+    deleteAccountId = id;
+    document.getElementById('delete-account-name').textContent = account.name;
+    const modal = document.getElementById('delete-modal');
+    const deleteBtn = document.getElementById('confirm-delete');
+    
+    modal?.classList.add('active');
+    deleteBtn.disabled = true;
+    deleteBtn.textContent = 'Delete (10)';
+
+    let countdown = 10;
+    if (deleteTimer) clearInterval(deleteTimer);
+    
+    deleteTimer = setInterval(() => {
+        countdown--;
+        if (countdown > 0) {
+            deleteBtn.textContent = `Delete (${countdown})`;
+        } else {
+            clearInterval(deleteTimer);
+            deleteTimer = null;
+            deleteBtn.disabled = false;
+            deleteBtn.textContent = 'Delete';
+        }
+    }, 1000);
+}
+
+export function hideDeleteModal() {
+    const modal = document.getElementById('delete-modal');
+    modal?.classList.remove('active');
+    deleteAccountId = null;
+    if (deleteTimer) {
+        clearInterval(deleteTimer);
+        deleteTimer = null;
+    }
+}
+
+export function handleDeleteAccount(id) {
+    showDeleteModal(id);
+}
+
+export function confirmDeleteAccount() {
+    if (deleteAccountId) {
+        removeAccount(deleteAccountId);
+        hideDeleteModal();
         window.location.reload();
     }
 }

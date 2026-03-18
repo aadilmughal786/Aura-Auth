@@ -78,6 +78,67 @@ body::before {
     margin-top: 0.5rem;
 }
 
+.toolbar {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.search-bar {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    transition: border-color 0.2s ease;
+}
+
+.search-bar:focus-within {
+    border-color: var(--accent);
+}
+
+.search-icon {
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+#search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    outline: none;
+}
+
+#search-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+.add-btn-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: var(--accent);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.add-btn-header:hover {
+    background: #5558e3;
+    transform: scale(1.05);
+}
+
 .main {
     display: flex;
     flex-direction: column;
@@ -90,28 +151,17 @@ body::before {
     gap: 1rem;
 }
 
-.add-button {
-    padding: 1.25rem;
-    background: var(--glass-bg);
-    border: 1px dashed var(--glass-border);
+.no-results {
+    text-align: center;
     color: var(--text-secondary);
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: all 0.2s ease;
-}
-
-.add-button:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: rgba(99, 102, 241, 0.05);
+    padding: 2rem;
+    font-size: 0.9rem;
 }
 
 .footer {
     text-align: center;
-    margin-top: 3rem;
-    padding: 1.5rem;
-    border-top: 1px solid var(--glass-border);
+    margin-top: 2rem;
+    padding: 1rem;
 }
 
 .footer p {
@@ -197,13 +247,19 @@ body::before {
     margin-top: 1.5rem;
 }
 
-.btn-primary, .btn-secondary {
+.modal-actions .btn-primary, 
+.modal-actions .btn-secondary,
+.modal-actions .btn-danger {
     flex: 1;
-    padding: 0.875rem;
+    padding: 0.875rem 1.5rem;
     border-radius: 8px;
     font-size: 1rem;
     cursor: pointer;
     transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
 }
 
 .btn-primary {
@@ -224,4 +280,51 @@ body::before {
 
 .btn-secondary:hover {
     border-color: var(--text-secondary);
+}
+
+.btn-danger {
+    background: var(--danger);
+    border: none;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+}
+
+.btn-danger:disabled {
+    background: rgba(239, 68, 68, 0.4);
+    cursor: not-allowed;
+}
+
+.btn-danger:disabled:hover {
+    background: rgba(239, 68, 68, 0.4);
+}
+
+.delete-modal-content {
+    text-align: center;
+}
+
+.delete-warning-icon {
+    color: var(--danger);
+    margin-bottom: 1rem;
+}
+
+.delete-modal-content h2 {
+    margin-bottom: 1rem;
+}
+
+.delete-message {
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.delete-message strong {
+    color: var(--accent);
+}
+
+.delete-warning {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
 }

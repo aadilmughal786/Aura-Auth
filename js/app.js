@@ -1,10 +1,13 @@
 import { startPulse, stopPulse, onPulseUpdate } from './core/timer.js';
 import { getAccounts, saveAccount, deleteAccount } from './utils/storage.js';
 import { renderAccounts, showAddModal, hideAddModal } from './ui/render.js';
-import { handleAddAccount, handleDeleteAccount, handleCopyCode } from './ui/events.js';
+import { handleAddAccount, handleDeleteAccount, handleCopyCode, hideDeleteModal, confirmDeleteAccount } from './ui/events.js';
+import { initSearch, searchAccounts, updateSearchIndex } from './utils/search.js';
 
 const state = {
     accounts: [],
+    filteredAccounts: [],
+    isSearching: false,
     selectedId: null
 };
 
@@ -12,7 +15,18 @@ function render(state) {
     const container = document.getElementById('accounts');
     if (container) {
         container.innerHTML = '';
-        state.accounts.forEach(account => {
+        
+        let accountsToRender;
+        if (state.isSearching && state.filteredAccounts.length === 0) {
+            container.innerHTML = '<p class="no-results">No accounts found</p>';
+            return;
+        } else if (state.isSearching) {
+            accountsToRender = state.filteredAccounts;
+        } else {
+            accountsToRender = state.accounts;
+        }
+        
+        accountsToRender.forEach(account => {
             const el = createAccountElement(account);
             container.appendChild(el);
         });
@@ -80,13 +94,35 @@ function updateUI({ accounts, remaining, progress }) {
     });
 }
 
+function handleSearch(query) {
+    if (!query.trim()) {
+        state.isSearching = false;
+        state.filteredAccounts = [];
+        render(state);
+        return;
+    }
+    state.isSearching = true;
+    state.filteredAccounts = searchAccounts(query);
+    render(state);
+}
+
 function init() {
     state.accounts = getAccounts().map(a => ({ ...a, code: '------', remaining: 30, progress: 100 }));
+    initSearch(getAccounts());
     render(state);
+
+    document.getElementById('search-input')?.addEventListener('input', (e) => {
+        handleSearch(e.target.value);
+    });
 
     document.getElementById('add-btn')?.addEventListener('click', showAddModal);
     document.getElementById('cancel-add')?.addEventListener('click', hideAddModal);
-    document.getElementById('save-account')?.addEventListener('click', handleAddAccount);
+    document.getElementById('save-account')?.addEventListener('click', () => {
+        const newAccount = handleAddAccount();
+        if (newAccount) {
+            updateSearchIndex(getAccounts());
+        }
+    });
     document.getElementById('accounts')?.addEventListener('click', (e) => {
         if (e.target.closest('.delete-btn')) {
             const id = e.target.closest('.delete-btn')?.dataset.delete;
@@ -100,6 +136,16 @@ function init() {
             const id = e.target.closest('.account-card')?.dataset.id;
             if (id) handleCopyCode(id);
         }
+    });
+
+    document.getElementById('cancel-delete')?.addEventListener('click', hideDeleteModal);
+    document.getElementById('confirm-delete')?.addEventListener('click', () => {
+        confirmDeleteAccount();
+        updateSearchIndex(getAccounts());
+    });
+
+    document.getElementById('delete-modal')?.addEventListener('click', (e) => {
+        if (e.target.id === 'delete-modal') hideDeleteModal();
     });
 
     startPulse();
