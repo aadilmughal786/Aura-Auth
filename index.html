@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura Auth - Privacy-First 2FA</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/glass.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="logo">Aura Auth</h1>
+            <p class="tagline">Privacy-First TOTP Generator</p>
+        </header>
+
+        <main class="main">
+            <div id="accounts" class="accounts-list"></div>
+            <button id="add-btn" class="add-button">+ Add Account</button>
+        </main>
+
+        <footer class="footer">
+            <p>Secrets never leave your browser</p>
+        </footer>
+    </div>
+
+    <div id="add-modal" class="modal">
+        <div class="modal-content">
+            <h2>Add Account</h2>
+            <div class="form-group">
+                <label for="account-name">Account Name</label>
+                <input type="text" id="account-name" placeholder="e.g., GitHub">
+            </div>
+            <div class="form-group">
+                <label for="account-issuer">Issuer (optional)</label>
+                <input type="text" id="account-issuer" placeholder="e.g., GitHub">
+            </div>
+            <div class="form-group">
+                <label for="account-secret">Secret Key</label>
+                <input type="text" id="account-secret" placeholder="Base32 encoded secret">
+            </div>
+            <div class="modal-actions">
+                <button id="cancel-add" class="btn-secondary">Cancel</button>
+                <button id="save-account" class="btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
